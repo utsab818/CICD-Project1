@@ -10,10 +10,10 @@ pipeline {
 
         stage('Send dockerfile to ansible server'){
             steps {
-                sshagent(['ansible_demo']) {
-                sh 'ssh -o StrictHostKeyChecking=no ubuntu@13.234.114.61'
-                sh 'scp /var/lib/jenkins/workspace/pipeline-demo/* ubuntu@13.234.114.61:/home/ubuntu'
-                }   
+                 sshagent(['ansible']) {
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.42.59'
+                    sh 'scp /var/lib/jenkins/workspace/pipeline-demo/* ubuntu@172.31.42.59:/home/ubuntu'
+                 }
             }
         }
     }
