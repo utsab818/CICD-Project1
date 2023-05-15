@@ -9,20 +9,19 @@ pipeline {
         }
 
         stage('Send dockerfile to ansible server'){
-            steps {
-                 sshagent(['ansible']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.42.59'
-                    sh 'scp /var/lib/jenkins/workspace/pipeline-demo/Dockerfile ubuntu@172.31.42.59:/home/ubuntu'
-                 }
+            sshagent(['ansible_demo']) {
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.42.59'
+                sh 'scp /var/lib/jenkins/workspace/pipeline-demo/* ubuntu@172.31.42.59:/home/ubuntu'
             }
         }
 
-        stage('Build docker image from docker file in ansible server')
+        stage('Build docker image from docker file in ansible server'){
             steps{
-                sshagent(['ansible']) {
+                sshagent(['ansible_demo']) {
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.42.59 cd /home/ubuntu/'
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.42.59 docker build -t $JOB_NAME:v1:$BUILD_ID .'
                 }
             }
     }
+}
 }
