@@ -1,7 +1,7 @@
 ---
 - name: Deploy to kubernetes cluster
   hosts: all
-  become: yes
+  become: ubuntu
 
   tasks:
   - name:  Create new deployment
