@@ -19,7 +19,7 @@ pipeline {
             steps {
                 sshagent(['AAAAA']) {
                 sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 cd /home/ubuntu/'
-                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 docker image build -t $JOB_NAME:v1.$BUILD_ID .'
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker image build -t $JOB_NAME:v1.$BUILD_ID .'
             }
             }
         }
