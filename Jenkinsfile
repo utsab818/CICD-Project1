@@ -53,6 +53,14 @@ pipeline {
                 }
             }
         }
+        stage('Run manfifest files using ansible in k8s server'){
+            steps {
+                sshagent(['AAAAA']) { 
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 cd /home/ubuntu/'   
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 ansible-playbook ansible.yml'   
+                }
+            }
+        }
 
     }
 }
