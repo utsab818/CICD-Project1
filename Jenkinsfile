@@ -39,6 +39,8 @@ pipeline {
                         sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker login -u utsab12312 -p ${dockerhub}'
                         sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker push utsab12312/$JOB_NAME:v1.$BUILD_ID'
                         sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker push utsab12312/$JOB_NAME:latest'
+                        // remove after pushing to dockerhub
+                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker image rm utsab12312/$JOB_NAME:v1.$BUILD_ID utsab12312/$JOB_NAME:latest'
                 }     
             }
         }
