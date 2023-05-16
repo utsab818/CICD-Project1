@@ -11,15 +11,15 @@ pipeline {
             steps {
                 sshagent(['AAAAA']) {
                 sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.42.59'
-                sh 'scp /var/lib/jenkins/workspace/pipeline-demo/Dockerfile ubuntu@172.31.42.59:/home/ubuntu/'
+                sh 'scp /var/lib/jenkins/workspace/pipeline-demo/Dockerfile ubuntu@172.31.40.198:/home/ubuntu/'
             }
             }
         }
         stage('Build docker image from docker file in ansible server'){
             steps {
                 sshagent(['AAAAA']) {
-                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.42.59 cd /home/ubuntu/'
-                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.42.59 docker image build -t $JOB_NAME:v1.$BUILD_ID .'
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 cd /home/ubuntu/'
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 docker image build -t $JOB_NAME:v1.$BUILD_ID .'
             }
             }
         }
