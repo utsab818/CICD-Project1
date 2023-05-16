@@ -42,6 +42,7 @@ pipeline {
                 }     
             }
         }
+        }
         stage('Copy files from jenkins to kubernetes server'){
             steps {
                 sshagent(['AAAAA']) { 
@@ -50,6 +51,6 @@ pipeline {
                 }
             }
         }
-    }
+
     }
 }
