@@ -47,7 +47,7 @@ pipeline {
             steps {
                 sshagent(['AAAAA']) { 
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.7.34'   
-                    sh 'scp /var/lib/jenkins/workspace/pipeline-demo/* ubuntu@172.31.7.34: /home/ubuntu'   
+                    sh 'scp /var/lib/jenkins/workspace/pipeline-demo/* ubuntu@172.31.7.34:/home/ubuntu/'   
                 }
             }
         }
