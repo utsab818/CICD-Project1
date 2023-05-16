@@ -11,8 +11,8 @@ pipeline {
             steps {
                 sshagent(['AAAAA']) {
                 sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198'
-                sh 'scp /var/lib/jenkins/workspace/pipeline-demo/Dockerfile ubuntu@172.31.40.198:/home/ubuntu/'
-            }
+                sh 'scp /var/lib/jenkins/workspace/pipeline-demo/* ubuntu@172.31.40.198:/home/ubuntu/'
+                }
             }
         }
         stage('Build docker image from docker file in ansible server'){
@@ -20,7 +20,7 @@ pipeline {
                 sshagent(['AAAAA']) {
                 sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 cd /home/ubuntu/'
                 sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker image build -t $JOB_NAME:v1.$BUILD_ID .'
-            }
+                }
             }
         }
         stage('Tag docker image'){
@@ -29,18 +29,26 @@ pipeline {
                 sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 cd /home/ubuntu/'
                 sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker image tag $JOB_NAME:v1.$BUILD_ID utsab12312/$JOB_NAME:v1.$BUILD_ID'
                 sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker image tag $JOB_NAME:v1.$BUILD_ID utsab12312/$JOB_NAME:latest'
-            }
+                }
             }
         }
         stage('Push image to dockerhub'){
             steps {
                 sshagent(['AAAAA']) {
                     withCredentials([string(credentialsId: 'dockerhub_passwd', variable: 'dockerhub_passwd')]) {
-                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker login -u utsab12312 -p $(dockerhub_passwd)'
+                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker login -u utsab12312 -p ${dockerhub_passwd}'
                         sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker push utsab12312/$JOB_NAME:v1.$BUILD_ID'
                         sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker push utsab12312/$JOB_NAME:latest'
-                }       
+                    }       
+                }
             }
+        }
+        stage('Copy files from jenkins to kubernetes server'){
+            steps {
+                sshagent(['AAAAA']) { 
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.7.34'   
+                    sh 'scp /var/lib/jenkins/workspace/pipeline-demo/* ubuntu@172.31.7.34: /home/ubuntu'   
+                }
             }
         }
     }
