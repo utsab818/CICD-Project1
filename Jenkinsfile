@@ -23,5 +23,14 @@ pipeline {
             }
             }
         }
+        stage('Tag docker image'){
+            steps {
+                sshagent(['AAAAA']) {
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 cd /home/ubuntu/'
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker image tag $JOB_NAME:v1.$BUILD_ID utsab12312/$JOB_NAME:v1.$BUILD_ID'
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker image tag $JOB_NAME:v1.$BUILD_ID utsab12312/$JOB_NAME:latest'
+            }
+            }
+        }
     }
 }
