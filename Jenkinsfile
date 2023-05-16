@@ -36,7 +36,7 @@ pipeline {
             steps {
                 sshagent(['AAAAA']) {
                     withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
-                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker login -u utsab12312 -p $(dockerhub)'
+                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker login -u utsab12312 -p ${dockerhub}'
                         sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker push utsab12312/$JOB_NAME:v1.$BUILD_ID'
                         sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker push utsab12312/$JOB_NAME:latest)'
                 }     
