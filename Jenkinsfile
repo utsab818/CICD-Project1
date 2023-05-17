@@ -10,25 +10,25 @@ pipeline {
         stage('Send dockerfile to ansible server'){
             steps {
                 sshagent(['AAAAA']) {
-                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198'
-                sh 'scp /var/lib/jenkins/workspace/pipeline-demo/* ubuntu@172.31.40.198:/home/ubuntu/'
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96'
+                sh 'scp /var/lib/jenkins/workspace/pipeline-demo/* ubuntu@172.31.34.96:/home/ubuntu/'
                 }
             }
         }
         stage('Build docker image from docker file in ansible server'){
             steps {
                 sshagent(['AAAAA']) {
-                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 cd /home/ubuntu/'
-                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker image build -t $JOB_NAME:v1.$BUILD_ID .'
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 cd /home/ubuntu/'
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 sudo docker image build -t $JOB_NAME:v1.$BUILD_ID .'
                 }
             }
         }
         stage('Tag docker image'){
             steps {
                 sshagent(['AAAAA']) {
-                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 cd /home/ubuntu/'
-                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker image tag $JOB_NAME:v1.$BUILD_ID utsab12312/$JOB_NAME:v1.$BUILD_ID'
-                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker image tag $JOB_NAME:v1.$BUILD_ID utsab12312/$JOB_NAME:latest'
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 cd /home/ubuntu/'
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 sudo docker image tag $JOB_NAME:v1.$BUILD_ID utsab12312/$JOB_NAME:v1.$BUILD_ID'
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 sudo docker image tag $JOB_NAME:v1.$BUILD_ID utsab12312/$JOB_NAME:latest'
                 }
             }
         }
@@ -36,11 +36,11 @@ pipeline {
             steps {
                 sshagent(['AAAAA']) {
                     withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
-                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker login -u utsab12312 -p ${dockerhub}'
-                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker push utsab12312/$JOB_NAME:v1.$BUILD_ID'
-                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker push utsab12312/$JOB_NAME:latest'
+                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 sudo docker login -u utsab12312 -p ${dockerhub}'
+                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 sudo docker push utsab12312/$JOB_NAME:v1.$BUILD_ID'
+                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 sudo docker push utsab12312/$JOB_NAME:latest'
                         // remove after pushing to dockerhub
-                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo docker image rm utsab12312/$JOB_NAME:v1.$BUILD_ID utsab12312/$JOB_NAME:latest'
+                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 sudo docker image rm utsab12312/$JOB_NAME:v1.$BUILD_ID utsab12312/$JOB_NAME:latest'
                 }     
             }
         }
@@ -48,16 +48,16 @@ pipeline {
         stage('Copy files from jenkins to kubernetes server'){
             steps {
                 sshagent(['AAAAA']) { 
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.7.34'   
-                    sh 'scp /var/lib/jenkins/workspace/pipeline-demo/* ubuntu@172.31.7.34:/home/ubuntu/'   
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.38.215'   
+                    sh 'scp /var/lib/jenkins/workspace/pipeline-demo/* ubuntu@172.31.38.215:/home/ubuntu/'   
                 }
             }
         }
         stage('Run manfifest files using ansible in k8s server'){
             steps {
                 sshagent(['AAAAA']) { 
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 cd /home/ubuntu/'   
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.40.198 sudo ansible-playbook ansible.yml'   
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 cd /home/ubuntu/'   
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 sudo ansible-playbook ansible.yml'   
                 }
             }
         }
