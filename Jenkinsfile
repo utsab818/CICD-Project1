@@ -48,8 +48,8 @@ pipeline {
         stage('Copy files from jenkins to kubernetes server'){
             steps {
                 sshagent(['AAAAA']) { 
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.38.215'   
-                    sh 'scp /var/lib/jenkins/workspace/pipeline-demo/* ubuntu@172.31.38.215:/home/ubuntu/'   
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.8.81'   
+                    sh 'scp /var/lib/jenkins/workspace/pipeline-demo/* ubuntu@172.31.8.81:/home/ubuntu/'   
                 }
             }
         }
