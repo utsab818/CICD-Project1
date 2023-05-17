@@ -57,7 +57,7 @@ pipeline {
             steps {
                 sshagent(['AAAAA']) { 
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 cd /home/ubuntu/'  
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 sudo su\ sudo ansible-playbook ansible.yml'   
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.34.96 sh ansible.sh'   
                 }
             }
         }
